@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اسم فامیل آنلاین</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+min-height:100vh;
+font-family:Tahoma,Arial;
+background:radial-gradient(circle at top,#252b55,#080b14 60%);
+color:#fff
+}
+.container{
+width:min(850px,94%);
+margin:30px auto
+}
+header{text-align:center;margin-bottom:25px}
+.logo{
+width:75px;height:75px;margin:auto;
+display:grid;place-items:center;
+border-radius:24px;
+font-size:35px;
+background:linear-gradient(135deg,#7c3aed,#2563eb);
+box-shadow:0 20px 60px #0008
+}
+h1{margin:15px 0 5px}
+.subtitle{color:#9ca3af}
+.card{
+background:#111522ee;
+border:1px solid #ffffff12;
+border-radius:22px;
+padding:22px;
+box-shadow:0 20px 60px #0006
+}
+button{
+width:100%;
+border:0;
+border-radius:14px;
+padding:16px;
+color:#fff;
+font-weight:bold;
+font-size:15px;
+cursor:pointer;
+background:linear-gradient(135deg,#7c3aed,#2563eb)
+}
+.status{
+text-align:center;
+padding:15px;
+color:#a5b4fc
+}
+.letter{
+width:80px;height:80px;
+margin:10px auto 20px;
+display:grid;place-items:center;
+border-radius:20px;
+background:#202637;
+font-size:38px;
+font-weight:bold;
+color:#a78bfa
+}
+.timer{
+text-align:center;
+font-size:25px;
+font-weight:bold;
+margin-bottom:18px;
+color:#fbbf24
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+.field{
+background:#090c14;
+border-radius:14px;
+padding:12px
+}
+.field label{
+display:block;
+margin-bottom:7px;
+color:#cbd5e1;
+font-size:13px
+}
+input{
+width:100%;
+background:#151a27;
+color:#fff;
+border:1px solid #252b3a;
+border-radius:10px;
+padding:12px;
+outline:none
+}
+.hidden{display:none}
+.result{text-align:center}
+.score{
+font-size:45px;
+font-weight:bold;
+color:#4ade80;
+margin:20px
+}
+@media(max-width:600px){
+.grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<div class="logo">🎯</div>
+<h1>اسم فامیل آنلاین</h1>
+<div class="subtitle">با حریف تصادفی بازی کن</div>
+</header>
+
+<div class="card">
+
+<div id="status" class="status">
+برای شروع بازی روی دکمه زیر بزن 👇
+</div>
+
+<div id="menu">
+<button onclick="findOpponent()">
+🎲 پیدا کردن حریف تصادفی
+</button>
+</div>
+
+<div id="game" class="hidden">
+
+<div id="letter" class="letter">؟</div>
+
+<div id="timer" class="timer">60</div>
+
+<div class="grid">
+
+<div class="field">
+<label>👤 اسم</label>
+<input id="name">
+</div>
+
+<div class="field">
+<label>👨‍👩‍👦 فامیل</label>
+<input id="family">
+</div>
+
+<div class="field">
+<label>🏙️ شهر</label>
+<input id="city">
+</div>
+
+<div class="field">
+<label>🌍 کشور</label>
+<input id="country">
+</div>
+
+<div class="field">
+<label>🍔 غذا</label>
+<input id="food">
+</div>
+
+<div class="field">
+<label>🐯 حیوان</label>
+<input id="animal">
+</div>
+
+<div class="field">
+<label>🎨 رنگ</label>
+<input id="color">
+</div>
+
+<div class="field">
+<label>📦 اشیا</label>
+<input id="thing">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="submitAnswers()">
+✅ پایان و ارسال جواب
+</button>
+
+</div>
+
+<div id="result" class="result hidden">
+
+<h2>🏆 نتیجه</h2>
+
+<div id="score" class="score">0</div>
+
+<p>امتیاز شما</p>
+
+<button onclick="again()">
+🔄 بازی دوباره
+</button>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+let ws;
+let myId=null;
+let timerInterval=null;
+let seconds=60;
+
+function connect(){
+
+const protocol=
+location.protocol==="https:"
+?"wss://":"ws://";
+
+ws=new WebSocket(
+protocol+location.host+"/ws"
+);
+
+ws.onmessage=event=>{
+handleMessage(JSON.parse(event.data));
+};
+
+ws.onclose=()=>{
+setStatus("❌ ارتباط قطع شد. صفحه را دوباره باز کن.");
+};
+
+}
+
+function handleMessage(data){
+
+switch(data.type){
+
+case"connected":
+myId=data.id;
+break;
+
+case"searching":
+setStatus("🔎 در حال پیدا کردن حریف...");
+break;
+
+case"matched":
+setStatus("🎉 حریف پیدا شد!");
+break;
+
+case"game_start":
+startGame(data);
+break;
+
+case"waiting_result":
+setStatus("⏳ منتظر جواب حریف...");
+break;
+
+case"game_finished":
+setStatus("⏰ زمان تمام شد!");
+break;
+
+case"result":
+showResult(data);
+break;
+
+case"opponent_left":
+setStatus("😕 حریف از بازی خارج شد.");
+break;
+
+}
+
+}
+
+function startGame(data){
+
+document.getElementById("menu")
+.classList.add("hidden");
+
+document.getElementById("result")
+.classList.add("hidden");
+
+document.getElementById("game")
+.classList.remove("hidden");
+
+document.getElementById("letter")
+.textContent=data.letter;
+
+seconds=data.seconds||60;
+
+clearInterval(timerInterval);
+
+timerInterval=setInterval(()=>{
+
+seconds--;
+
+document.getElementById("timer")
+.textContent=seconds;
+
+if(seconds<=0){
+
+clearInterval(timerInterval);
+submitAnswers();
+
+}
+
+},1000);
+
+setStatus("⚡ شروع شد! سریع جواب بده.");
+
+}
+
+function submitAnswers(){
+
+if(!ws||
+ws.readyState!==WebSocket.OPEN)
+return;
+
+clearInterval(timerInterval);
+
+const fields=[
+"name","family","city","country",
+"food","animal","color","thing"
+];
+
+const answers={};
+
+fields.forEach(field=>{
+answers[field]=
+document.getElementById(field).value.trim();
+});
+
+ws.send(JSON.stringify({
+action:"submit",
+answers:answers
+}));
+
+setStatus("⏳ جواب‌ها ارسال شد...");
+
+}
+
+function showResult(data){
+
+document.getElementById("game")
+.classList.add("hidden");
+
+document.getElementById("result")
+.classList.remove("hidden");
+
+const mine=data.scores.find(
+x=>x.id===myId
+);
+
+document.getElementById("score")
+.textContent=mine?mine.score:0;
+
+setStatus("🏆 بازی تمام شد!");
+
+}
+
+function again(){
+
+document.querySelectorAll("input")
+.forEach(x=>x.value="");
+
+document.getElementById("result")
+.classList.add("hidden");
+
+document.getElementById("game")
+.classList.add("hidden");
+
+document.getElementById("menu")
+.classList.remove("hidden");
+
+setStatus("🎲 آماده‌ای؟ دوباره حریف پیدا کن.");
+
+}
+
+function findOpponent(){
+
+if(!ws||
+ws.readyState!==WebSocket.OPEN){
+
+connect();
+
+setTimeout(findOpponent,500);
+
+return;
+
+}
+
+ws.send(JSON.stringify({
+action:"find"
+}));
+
+}
+
+function setStatus(text){
+document.getElementById("status")
+.textContent=text;
+}
+
+connect();
+
+</script>
+
+</body>
+</html>
