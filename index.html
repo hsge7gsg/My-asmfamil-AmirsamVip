@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#080b16">
+
+<title>اسم فامیل | بازی آنلاین</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Tahoma,Arial,sans-serif;
+    color:#fff;
+
+    background:
+    radial-gradient(
+        circle at 20% 0%,
+        #33256d 0,
+        transparent 35%
+    ),
+    radial-gradient(
+        circle at 100% 20%,
+        #123d68 0,
+        transparent 35%
+    ),
+    #070a12;
+}
+
+.container{
+    width:min(900px,94%);
+    margin:auto;
+    padding:25px 0 50px;
+}
+
+header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    width:76px;
+    height:76px;
+    margin:auto;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:24px;
+
+    font-size:36px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #8b5cf6,
+        #2563eb
+    );
+
+    box-shadow:
+    0 20px 70px #0009;
+}
+
+h1{
+    margin:15px 0 6px;
+    font-size:29px;
+}
+
+.subtitle{
+    color:#9ca3af;
+    font-size:14px;
+}
+
+.card{
+    background:#101522ee;
+
+    border:
+    1px solid #ffffff12;
+
+    border-radius:24px;
+
+    padding:20px;
+
+    box-shadow:
+    0 25px 80px #0008;
+
+    backdrop-filter:blur(15px);
+}
+
+.top{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.info{
+    background:#090d17;
+    border-radius:16px;
+    padding:15px;
+    text-align:center;
+}
+
+.info small{
+    display:block;
+    color:#94a3b8;
+    margin-bottom:5px;
+}
+
+.info strong{
+    font-size:25px;
+}
+
+.letter{
+    width:90px;
+    height:90px;
+    margin:10px auto 18px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:25px;
+
+    font-size:43px;
+    font-weight:bold;
+
+    background:
+    linear-gradient(
+        135deg,
+        #25184e,
+        #112a49
+    );
+
+    color:#c4b5fd;
+
+    box-shadow:
+    inset 0 0 30px #ffffff08;
+}
+
+.timer{
+    text-align:center;
+
+    font-size:27px;
+    font-weight:bold;
+
+    color:#fbbf24;
+
+    margin-bottom:18px;
+}
+
+.progress{
+    width:100%;
+    height:7px;
+
+    background:#202635;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    margin-bottom:20px;
+}
+
+.progressBar{
+    height:100%;
+    width:100%;
+
+    background:
+    linear-gradient(
+        90deg,
+        #8b5cf6,
+        #2563eb
+    );
+
+    transition:width 1s linear;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.field{
+    background:#090d16;
+
+    border:
+    1px solid #ffffff08;
+
+    border-radius:16px;
+
+    padding:13px;
+}
+
+.field label{
+    display:block;
+
+    color:#cbd5e1;
+
+    font-size:13px;
+
+    margin-bottom:8px;
+}
+
+input{
+    width:100%;
+
+    border:1px solid #252c3d;
+
+    background:#141927;
+
+    color:white;
+
+    padding:13px;
+
+    border-radius:11px;
+
+    outline:none;
+
+    font-size:14px;
+}
+
+input:focus{
+    border-color:#6366f1;
+
+    box-shadow:
+    0 0 0 3px #6366f122;
+}
+
+button{
+    width:100%;
+
+    border:0;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+.primary{
+    margin-top:17px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #8b5cf6,
+        #2563eb
+    );
+
+    box-shadow:
+    0 12px 30px #4f46e544;
+}
+
+.secondary{
+    background:#202637;
+}
+
+.danger{
+    background:#7f1d1d;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.result{
+    text-align:center;
+}
+
+.resultIcon{
+    font-size:55px;
+}
+
+.finalScore{
+    font-size:55px;
+    font-weight:bold;
+
+    margin:10px;
+
+    color:#4ade80;
+}
+
+.best{
+    color:#fbbf24;
+    margin-bottom:20px;
+}
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.status{
+    text-align:center;
+    color:#a5b4fc;
+    margin-bottom:15px;
+    line-height:1.8;
+}
+
+@media(max-width:650px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .top{
+        grid-template-columns:1fr 1fr;
+    }
+
+    h1{
+        font-size:24px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<div class="logo">
+🎯
+</div>
+
+<h1>
+اسم فامیل
+</h1>
+
+<div class="subtitle">
+نسخه موبایلی • سریع • رایگان
+</div>
+
+</header>
+
+
+<div class="card">
+
+<!-- GAME -->
+
+<div id="game">
+
+<div class="top">
+
+<div class="info">
+<small>⏱️ زمان</small>
+<strong id="timer">60</strong>
+</div>
+
+<div class="info">
+<small>🏆 رکورد</small>
+<strong id="best">0</strong>
+</div>
+
+</div>
+
+
+<div id="status"
+     class="status">
+
+حرف بازی:
+
+</div>
+
+
+<div id="letter"
+     class="letter">
+؟
+</div>
+
+
+<div class="progress">
+<div id="progressBar"
+     class="progressBar">
+</div>
+</div>
+
+
+<div class="grid">
+
+<div class="field">
+<label>👤 اسم</label>
+<input id="name"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>👨‍👩‍👦 فامیل</label>
+<input id="family"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>🏙️ شهر</label>
+<input id="city"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>🌍 کشور</label>
+<input id="country"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>🍔 غذا</label>
+<input id="food"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>🐯 حیوان</label>
+<input id="animal"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>🎨 رنگ</label>
+<input id="color"
+       autocomplete="off">
+</div>
+
+
+<div class="field">
+<label>📦 اشیا</label>
+<input id="thing"
+       autocomplete="off">
+</div>
+
+</div>
+
+
+<button
+class="primary"
+onclick="finishGame()">
+
+🏁 پایان بازی
+
+</button>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div id="result"
+     class="result hidden">
+
+<div class="resultIcon">
+🏆
+</div>
+
+<h2>
+نتیجه بازی
+</h2>
+
+<div id="finalScore"
+     class="finalScore">
+0
+</div>
+
+<div id="bestMessage"
+     class="best">
+</div>
+
+
+<div class="actions">
+
+<button
+class="secondary"
+onclick="newGame()">
+
+🔄 بازی دوباره
+
+</button>
+
+
+<button
+class="secondary"
+onclick="shareResult()">
+
+📤 اشتراک نتیجه
+
+</button>
+
+</div>
+
+<br>
+
+<button
+class="danger"
+onclick="clearBest()">
+
+🗑️ پاک کردن رکورد
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const letters =
+"ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی".split("");
+
+const fields = [
+"name",
+"family",
+"city",
+"country",
+"food",
+"animal",
+"color",
+"thing"
+];
+
+let currentLetter = "";
+
+let time = 60;
+
+let timer = null;
+
+let playing = false;
+
+
+/*
+شروع بازی
+*/
+
+function newGame(){
+
+    clearInterval(timer);
+
+    document
+        .getElementById("game")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("result")
+        .classList.add("hidden");
+
+
+    fields.forEach(id => {
+
+        document
+            .getElementById(id)
+            .value = "";
+
+    });
+
+
+    currentLetter =
+        letters[
+            Math.floor(
+                Math.random() *
+                letters.length
+            )
+        ];
+
+
+    document
+        .getElementById("letter")
+        .textContent =
+        currentLetter;
+
+
+    time = 60;
+
+    playing = true;
+
+
+    updateTimer();
+
+    setStatus(
+        "با حرف «" +
+        currentLetter +
+        "» شروع کن! 🔥"
+    );
+
+
+    timer =
+        setInterval(() => {
+
+            time--;
+
+            updateTimer();
+
+            if(time <= 0){
+
+                finishGame();
+
+            }
+
+        },1000);
+
+
+    document
+        .getElementById("name")
+        .focus();
+
+}
+
+
+/*
+تایمر
+*/
+
+function updateTimer(){
+
+    document
+        .getElementById("timer")
+        .textContent =
+        time;
+
+
+    const percent =
+        Math.max(
+            0,
+            (time / 60) * 100
+        );
+
+
+    document
+        .getElementById("progressBar")
+        .style.width =
+        percent + "%";
+
+}
+
+
+/*
+پایان
+*/
+
+function finishGame(){
+
+    if(!playing)
+        return;
+
+
+    playing = false;
+
+    clearInterval(timer);
+
+
+    let score = 0;
+
+
+    fields.forEach(id => {
+
+        const value =
+            document
+            .getElementById(id)
+            .value
+            .trim();
+
+
+        if(value){
+
+            /*
+            امتیاز پایه
+            */
+
+            score += 10;
+
+
+            /*
+            جواب شروع‌شده با حرف
+            */
+
+            if(
+                value.startsWith(
+                    currentLetter
+                )
+            ){
+
+                score += 5;
+
+            }
+
+        }
+
+    });
+
+
+    const oldBest =
+        Number(
+            localStorage.getItem(
+                "nameFamilyBest"
+            ) || 0
+        );
+
+
+    if(score > oldBest){
+
+        localStorage.setItem(
+            "nameFamilyBest",
+            score
+        );
+
+        document
+            .getElementById(
+                "bestMessage"
+            )
+            .textContent =
+            "🎉 رکورد جدید زدی!";
+
+    }else{
+
+        document
+            .getElementById(
+                "bestMessage"
+            )
+            .textContent =
+            "رکورد فعلی: " +
+            oldBest;
+
+    }
+
+
+    document
+        .getElementById(
+            "finalScore"
+        )
+        .textContent =
+        score;
+
+
+    document
+        .getElementById("game")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("result")
+        .classList.remove("hidden");
+
+
+    updateBest();
+
+}
+
+
+/*
+رکورد
+*/
+
+function updateBest(){
+
+    const best =
+        localStorage.getItem(
+            "nameFamilyBest"
+        ) || 0;
+
+
+    document
+        .getElementById("best")
+        .textContent =
+        best;
+
+}
+
+
+/*
+پاک کردن رکورد
+*/
+
+function clearBest(){
+
+    localStorage.removeItem(
+        "nameFamilyBest"
+    );
+
+    updateBest();
+
+    alert(
+        "رکورد پاک شد ✅"
+    );
+
+}
+
+
+/*
+اشتراک نتیجه
+*/
+
+async function shareResult(){
+
+    const score =
+        document
+        .getElementById(
+            "finalScore"
+        )
+        .textContent;
+
+
+    const text =
+        "🎯 اسم فامیل\n\n" +
+        "حرف: " +
+        currentLetter +
+        "\n" +
+        "امتیاز من: " +
+        score +
+        " 🏆";
+
+
+    if(
+        navigator.share
+    ){
+
+        try{
+
+            await navigator.share({
+                title:"اسم فامیل",
+                text:text
+            });
+
+        }catch(e){}
+
+    }else{
+
+        await navigator
+            .clipboard
+            .writeText(text);
+
+        alert(
+            "نتیجه کپی شد 📋"
+        );
+
+    }
+
+}
+
+
+/*
+وضعیت
+*/
+
+function setStatus(text){
+
+    document
+        .getElementById(
+            "status"
+        )
+        .textContent =
+        text;
+
+}
+
+
+/*
+شروع اولیه
+*/
+
+updateBest();
+
+newGame();
+
+</script>
+
+</body>
+</html>
